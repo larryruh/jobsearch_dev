@@ -1,0 +1,71 @@
+/* Applies to the entire body of the HTML document (except where overridden by more specific
+selectors). */
+body {
+  margin: 25px;
+  /*background-color: rgb(240,240,240);*/
+  font-family: arial, sans-serif;
+  font-size: 14px;
+  font-weight: bold;
+}
+a:link {
+  text-decoration: none;
+}
+
+a:visited {
+  text-decoration: none;
+}   
+
+/* Applies to all <h1>...</h1> elements. */
+h1 {
+  font-size: 30px;
+  font-weight: bold;
+  margin-top: 5px;
+}
+
+/* Applies to all elements with <... class="someclass"> specified. */
+.top_menu { 
+    color: darkblue; 
+    font-size: 20px;
+    text-decoration: none;
+    font-weight: bold;
+}
+.sub_menu { 
+    color: darkblue; 
+    font-size: 15px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.report_header{
+    background-color: black;
+    color: white; 
+    font-size: 15px;
+    text-decoration: none;
+    font-weight: bold;
+    
+}
+.report_detail{
+    background-color: azure;
+    color: black; 
+    font-size: 11px;
+    text-decoration: none;
+    font-weight: normal;
+
+}
+.report_title {
+    color: black; 
+    font-size: 30px;
+    font-weight: bold;
+    text-decoration: none;
+    text-align: center;
+    padding: 20px;
+
+}
+
+/* Applies to the element with <... id="someid"> specified. */
+#top_menu { 
+    color: red; 
+    font-size: 35px;
+    font-weight: normal;
+    text-decoration: none;
+}

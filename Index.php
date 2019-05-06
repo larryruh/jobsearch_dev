@@ -1,0 +1,1 @@
+<HTML><HEAD><script language="javascript">	//top.location.replace("test.php");</script</HEAD><BODY><?phpecho "<p>Hello</p>";?></BODY></HTML>
