@@ -1,4 +1,33 @@
 <?php 
+//color every other line on report
+$(function() {
+	var rows = $("tr");
+	rows.filter(":even").css("background", "red");
+	rows.filter(":odd").css("background", "blue");
+});
+
+//Changing an image
+//<img id="my_image" src="first.jpg"/>
+//Then you can change the src of your image with jQuery like this:
+
+$("#my_image").attr("src","second.jpg");
+//To attach this to a click event, you could write:
+
+$('#my_image').on({
+    'click': function(){
+        $('#my_image').attr('src','second.jpg');
+    }
+});
+//To rotate the image, you could do this:
+
+$('img').on({
+    'click': function() {
+         var src = ($(this).attr('src') === 'img1_on.jpg')
+            ? 'img2_on.jpg'
+            : 'img1_on.jpg';
+         $(this).attr('src', src);
+    }
+});
 
 try {
     $pdo = new PDO('mysql:host=localhost:8889;dbname=jobsearch;
