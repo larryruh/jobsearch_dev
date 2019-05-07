@@ -1,4 +1,5 @@
 <?php 
+//just making a change
 //color every other line on report
 $(function() {
 	var rows = $("tr");
