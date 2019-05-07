@@ -12,8 +12,8 @@ if ($query_sort == ''){
 $report_sql = 'SELECT job_id, company, job_title, job_category, city, state, date_applied, status, phone_screen, first_interview FROM job ' . $where_statement . 'ORDER BY ' . $query_sort . ';';
 
 try {
-    $pdo = new PDO('mysql:host=localhost:8889;dbname=jobsearch;
-    charset=utf8', 'lruh', 'Asdfasdf1');
+    $ini = parse_ini_file('app.ini');
+    $pdo = new PDO($ini['db_conn_str'], $ini['db_user'], $ini['db_password']);
     $pdo->setAttribute(PDO::ATTR_ERRMODE,
      PDO::ERRMODE_EXCEPTION);
     //$output = 'Database connection established.';
@@ -21,6 +21,7 @@ try {
 } catch (PDOException $e) {
     $output = 'Unable to connect to the database server: ' . $e;
     echo $output;
+    
 }
 
 ?>
@@ -94,7 +95,7 @@ try {
                 } else {
                     $filter_selected = '';
                 }
-                echo '<option value='.$row['company_id'].$filter_selected.' >'.$row['company_name'].'</option>';
+                echo '<option value="'.$row['company_id'].'"'.$filter_selected.' >'.$row['company_name'].'</option>';
              }
              echo '</select></td>';
         //Job Category Filter
@@ -108,7 +109,7 @@ try {
                 } else {
                     $filter_selected = '';
                 }
-                echo '<option value='.$row['job_category'].$filter_selected.'>'.$row['job_category'].'</option>';
+                echo '<option value="'.$row['job_category'].'"'.$filter_selected.'>'.$row['job_category'].'</option>';
              }
              echo '</select></td>';
         //City Filter
@@ -122,7 +123,7 @@ try {
                 } else {
                     $filter_selected = '';
                 }
-                echo '<option value='.$row['city'].$filter_selected.'>'.$row['city'].'</option>';
+                echo '<option value="'.$row['city'].'"'.$filter_selected.'>'.$row['city'].'</option>';
              }
              echo '</select></td>'; 
         //State Filter

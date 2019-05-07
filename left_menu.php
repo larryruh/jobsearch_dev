@@ -34,7 +34,7 @@
         <tr>
             <td>
                  <a href="application_list.php" target="results_frame">Search</a><br>
-                <a href="application_edit.php?mode=new" target="results_frame">Add New</a>
+                <a href="edit_job.php?mode=new" target="results_frame">Add New</a>
             </td>
         </tr>
     </table>
