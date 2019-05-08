@@ -4,7 +4,21 @@
 
 <head>
     <link rel=stylesheet type="text/css" href="jobsearch.css">
-    <script language="javascript">
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script>
+        /*$('#app_expand').on({
+            'click': function() {
+                 var src = ($(this).attr('src') === 'img/collapse.png')
+                    ? 'expand.png'
+                    : 'collapse.png';
+                 $(this).attr('src', src);
+            }
+        });*/
+        $('#app_link').on({
+            'click': function(){
+                $('#app_expand').attr('src','img/collapse.png');
+            }
+        });
         function hideMenu(header){
             element = document.getElementById(header);
             if(element.style.display!="none"){
@@ -19,13 +33,13 @@
     <title>Jobsearch Menu</title>
 </head>
 
-<body onload="imhere();">
+<body>
     <img id="workingman" width="150" height="150" src="img/workingman.jpg" alt="Get a Job!" />
     <h1>Job Search HQ</h1>
     <table border="0">
         <tr>
             <td>
-                <a href="javascript:hideMenu('app_sub_menu')"><div class="top_menu"><img id="app_expand" src="img/expand.png" height="10" width="10"> Job Applications</div></a>
+                <a href="javascript:hideMenu('app_sub_menu')" id="app_link"><div class="top_menu"><img id="app_expand" src="img/expand.png" height="10" width="10"> Job Applications</div></a>
             </td>
         </tr>   
     </table>
