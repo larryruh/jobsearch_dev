@@ -1,15 +1,14 @@
 <?php 
 $mode = $_GET['mode'];
 $job_id = $_GET['job_id'];
-if($mode == 'edit')
+$submitted = $_POST['submitted'];
     
-
 try {
     $ini = parse_ini_file('app.ini');
     $pdo = new PDO($ini['db_conn_str'], $ini['db_user'], $ini['db_password']);
     $pdo->setAttribute(PDO::ATTR_ERRMODE,
      PDO::ERRMODE_EXCEPTION);
-    //$output = 'Database connection established.';
+    $output = 'Database connection established.';
     
 } catch (PDOException $e) {
     $output = 'Unable to connect to the database server: ' . $e;
@@ -17,17 +16,47 @@ try {
     
 }
 
+if($submitted == 'true'){
+    
+    //deal with new company, if company=new, insert new_company into company, get id back, populate $company_id, and put the new company in the $company variable.
+    
+    $data = [
+        'company_id' => $_POST['company_id'],
+        'company' => $_POST['company'],
+        'job_title' => $_POST['job_title'],
+        'job_category' => $_POST['job_category'],
+        'city' => $_POST['city'],
+        'state' => $_POST['state'],
+        'contact' => $_POST['contact'],
+        'referred_by' => $_POST['referred_by'],
+        'date_applied' => $_POST['date_applied'],
+        'status' => $_POST['status'],
+        'phone_screen' => $_POST['phone_screen'],
+        'first_interview' => $_POST['first_interview'],
+        'second_interview' => $_POST['second_interview'],
+        'offer' => $_POST['offer'],
+        
+    ];
+    $sql = 'INSERT INTO Job (job_id, company_id, company, job_title, job_category, city, state, contact, referred_by, date_applied, status, phone_screen, first_interview, second_interview, offer) 
+    VALUES(:company_id, :company, :job_title, :job_category, :city, :state, :contact, :referred_by, :date_applied, :status, :phone_screen, :first_interview, :second_interview, :offer)';
+    $stmt= $pdo->prepare($sql);
+    $stmt->execute($data);
+    $job_id = $conn->lastInsertId();
+    $mode='edit';
+}
+
 switch($mode){
     case 'edit':
         $form_title = 'Edit Job Application';
-        $sql = 'SELECT job_id, company, job_title, job_category, city, state, contact, referred_by, date_applied, status, phone_screen, first_interview, second_interview, offer FROM job WHERE job_id = '.$job_id.';';
+        $sql = 'SELECT job_id, company_id, company, job_title, job_category, city, state, contact, referred_by, date_applied, status, phone_screen, first_interview, second_interview, offer FROM job WHERE job_id = '.$job_id.';';
         $job_detail = $pdo->query($sql);
         while ($row = $job_detail->fetch()){
+            $company_id = $row['company_id'];
             $company = $row['company'];
             $job_title = $row['job_title'];
             $job_category = $row['job_category'];
             $city = $row['city'];
-            $state = $row['city'];
+            $state = $row['state'];
             $contact = $row['contact'];
             $referred_by = $row['referred_by'];
             $date_applied = $row['date_applied'];
@@ -40,6 +69,7 @@ switch($mode){
         break;
     case 'new':
         $form_title = 'New Job Application';
+        $company_id = '';
         $company = '';
         $job_title = '';
         $job_category = '';
@@ -93,6 +123,10 @@ switch($mode){
 <body>
 <form action="edit_job.php" name="job_form" method="post">   
 <table border=0>
+    <?php 
+    if($submitted == 'true'){
+        echo '<h1 class="notification">Application Updated</h1>';
+    }?>
     <tr>
         <td colspan=8 class="report_title"><?=$form_title?></td>
     </tr>
@@ -106,11 +140,16 @@ switch($mode){
         <td><select name="company" id="company">
                 <option value="">Select Company</option>
                 <option value="new">--NEW COMPANY--</option>
-                <?php 
-                $sql = 'SELECT company_id, company_name FROM company ORDER BY company_name';
-                $company_list = $pdo->query($sql);
-                while ($row = $company_list->fetch()){
-                    echo '<option value="'.$row['company_id'].'">'.$row['company_name'].'</option>';
+                <?php
+                    $sql = 'SELECT company_id, company_name FROM company ORDER BY company_name';
+                    $company_list = $pdo->query($sql);
+                    while ($row = $company_list->fetch()){
+                    if($company_id == $row['company_id']){
+                        $filter_selected = ' Selected ';
+                    } else {
+                        $filter_selected = '';
+                    } 
+                    echo '<option value="'.$row['company_id'].'"'.$filter_selected.'>'.$row['company_name'].'</option>';
                 }?>
             </select> 
         </td>
@@ -139,7 +178,12 @@ switch($mode){
                 $sql = 'SELECT distinct job_category FROM job ORDER BY job_category';
                 $category_list = $pdo->query($sql);
                 while ($row = $category_list->fetch()){
-                    echo '<option value="'.$row['job_category'].'">'.$row['job_category'].'</option>';
+                    if($job_category == $row['job_category']){
+                        $filter_selected = ' Selected ';
+                    } else {
+                        $filter_selected = '';
+                    } 
+                    echo '<option value="'.$row['job_category'].'"'.$filter_selected.'>'.$row['job_category'].'</option>';
                 }?>
             </select> 
         </td>
@@ -156,7 +200,12 @@ switch($mode){
                 $sql = 'SELECT state_id, state_name FROM States ORDER BY state_name';
                 $state_list = $pdo->query($sql);
                 while ($row = $state_list->fetch()){
-                    echo '<option value="'.$row['state_id'].'">'.$row['state_name'].'</option>';
+                    if($state == $row['state_id']){
+                        $filter_selected = ' Selected ';
+                    } else {
+                        $filter_selected = '';
+                    } 
+                    echo '<option value="'.$row['state_id'].'"'.$filter_selected.'>'.$row['state_name'].'</option>';
                 }?>
             </select> 
         </td>
@@ -194,10 +243,13 @@ switch($mode){
         <td><input type="text" id="offer" size=40 value="<?=$offer?>"> 
         </td>
     </tr>
-
-    <tr><td colpan=2 align="center"><input type="submit" value="Submit"></td></tr>
+    <tr>
+        <td align="center"><input type="submit" value="Save"></td>
+        <td align="center"><button id="back_button" onClick="window.history.go(-1);">Back to Report</button></td>
+    </tr>
 </table> 
 <input type="hidden" id="job_id" value="<?=$job_id?>">
+<input type="hidden" id="submitted" value="true">
 </form>
 </body>
 </html>
