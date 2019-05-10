@@ -25,14 +25,20 @@ if($submitted == 'true'){
             $stmt= $pdo->prepare($sql);
             $stmt->execute([$new_company_name]);
             $company_id = $pdo->lastInsertId();
-            $company = $_POST['new_company'];
+            $company_name = $_POST['new_company'];
         } catch (PDOException $e) {
              $output = 'Unable to update Company table ' . $e;
              echo $output;
         }
     } else {
-        $company_id = $_POST['company_id'];
-        $company = $_POST['company'];
+         //$company_id = $_POST['company_id']; //there is no company_id posted, dumbass! company id is in _post['company'];
+         $company_id = $_POST['company'];
+         $sql = 'SELECT company_name FROM company WHERE company_id = '.$company_id.'ORDER BY company_name';
+         $company_list = $pdo->query($sql);
+         while ($row = $company_list->fetch()){
+            $company_name = row['company_name']; 
+         }
+        
     }
     
     
@@ -41,7 +47,7 @@ if($submitted == 'true'){
     if($mode == 'new'){
         $data = [
             'company_id' => $company_id,
-            'company' => $company,
+            'company' => $company_name,
             'job_title' => $_POST['job_title'],
             'job_category' => $_POST['category'],
             'city' => $_POST['city'],
@@ -56,7 +62,7 @@ if($submitted == 'true'){
             'offer' => $_POST['offer'],
         ];
         $sql = 'INSERT INTO Job (company_id, company, job_title, job_category, city, state, contact, referred_by, date_applied, status, phone_screen, first_interview, second_interview, offer) 
-        VALUES(:company_id, :company, :job_title, :job_category, :city, :state, :contact, :referred_by, :date_applied, :status, :phone_screen, :first_interview, :second_interview, :offer)';
+        VALUES(:company_id, :company_name, :job_title, :job_category, :city, :state, :contact, :referred_by, :date_applied, :status, :phone_screen, :first_interview, :second_interview, :offer)';
         try{
             $stmt= $pdo->prepare($sql);
             $stmt->execute($data);
@@ -70,7 +76,7 @@ if($submitted == 'true'){
         
         $data = [
             'company_id' => $company_id,
-            'company' => $company,
+            'company' => $company_name,
             'job_title' => $_POST['job_title'],
             'job_category' => $_POST['category'],
             'city' => $_POST['city'],
@@ -88,7 +94,7 @@ if($submitted == 'true'){
         ];
         $sql = 'UPDATE job SET 
                     company_id=:company_id,
-                    company=:company, 
+                    company=:company_name, 
                     job_title=:job_title, 
                     job_category=:job_category, 
                     city=:city, 
@@ -122,7 +128,7 @@ switch($mode){
         $job_detail = $pdo->query($sql);
         while ($row = $job_detail->fetch()){
             $company_id = $row['company_id'];
-            $company = $row['company'];
+            $company_name = $row['company'];
             $job_title = $row['job_title'];
             $job_category = $row['job_category'];
             $city = $row['city'];
@@ -140,7 +146,7 @@ switch($mode){
     case 'new':
         $form_title = 'New Job Application';
         $company_id = '';
-        $company = '';
+        $company_name = '';
         $job_title = '';
         $job_category = '';
         $city = '';
