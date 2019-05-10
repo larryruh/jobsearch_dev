@@ -18,31 +18,101 @@ try {
 
 if($submitted == 'true'){
     
-    //deal with new company, if company=new, insert new_company into company, get id back, populate $company_id, and put the new company in the $company variable.
+    //deal with new company
+    if($_POST['company'] == 'new'){
+        $sql = "INSERT INTO company (company_name) VALUES (?)";
+        try{
+            $stmt= $pdo->prepare($sql);
+            $stmt->execute([$new_company_name]);
+            $company_id = $pdo->lastInsertId();
+            $company = $_POST['new_company'];
+        } catch (PDOException $e) {
+             $output = 'Unable to update Company table ' . $e;
+             echo $output;
+        }
+    } else {
+        $company_id = $_POST['company_id'];
+        $company = $_POST['company'];
+    }
     
-    $data = [
-        'company_id' => $_POST['company_id'],
-        'company' => $_POST['company'],
-        'job_title' => $_POST['job_title'],
-        'job_category' => $_POST['job_category'],
-        'city' => $_POST['city'],
-        'state' => $_POST['state'],
-        'contact' => $_POST['contact'],
-        'referred_by' => $_POST['referred_by'],
-        'date_applied' => $_POST['date_applied'],
-        'status' => $_POST['status'],
-        'phone_screen' => $_POST['phone_screen'],
-        'first_interview' => $_POST['first_interview'],
-        'second_interview' => $_POST['second_interview'],
-        'offer' => $_POST['offer'],
+    
         
-    ];
-    $sql = 'INSERT INTO Job (job_id, company_id, company, job_title, job_category, city, state, contact, referred_by, date_applied, status, phone_screen, first_interview, second_interview, offer) 
-    VALUES(:company_id, :company, :job_title, :job_category, :city, :state, :contact, :referred_by, :date_applied, :status, :phone_screen, :first_interview, :second_interview, :offer)';
-    $stmt= $pdo->prepare($sql);
-    $stmt->execute($data);
-    $job_id = $conn->lastInsertId();
-    $mode='edit';
+   
+    if($mode == 'new'){
+        $data = [
+            'company_id' => $company_id,
+            'company' => $company,
+            'job_title' => $_POST['job_title'],
+            'job_category' => $_POST['category'],
+            'city' => $_POST['city'],
+            'state' => $_POST['state'],
+            'contact' => $_POST['contact'],
+            'referred_by' => $_POST['referred_by'],
+            'date_applied' => $_POST['date_applied'],
+            'status' => $_POST['status'],
+            'phone_screen' => $_POST['phone_screen'],
+            'first_interview' => $_POST['first_interview'],
+            'second_interview' => $_POST['second_interview'],
+            'offer' => $_POST['offer'],
+        ];
+        $sql = 'INSERT INTO Job (company_id, company, job_title, job_category, city, state, contact, referred_by, date_applied, status, phone_screen, first_interview, second_interview, offer) 
+        VALUES(:company_id, :company, :job_title, :job_category, :city, :state, :contact, :referred_by, :date_applied, :status, :phone_screen, :first_interview, :second_interview, :offer)';
+        try{
+            $stmt= $pdo->prepare($sql);
+            $stmt->execute($data);
+            $job_id = $conn->lastInsertId();     
+        } catch (PDOException $e) {
+            $output = 'Unable to update Job' . $e;
+            echo $output;
+        }
+        $mode = 'edit';
+    } else {
+        
+        $data = [
+            'company_id' => $company_id,
+            'company' => $company,
+            'job_title' => $_POST['job_title'],
+            'job_category' => $_POST['category'],
+            'city' => $_POST['city'],
+            'state' => $_POST['state'],
+            'contact' => $_POST['contact'],
+            'referred_by' => $_POST['referred_by'],
+            'date_applied' => $_POST['date_applied'],
+            'status' => $_POST['status'],
+            'phone_screen' => $_POST['phone_screen'],
+            'first_interview' => $_POST['first_interview'],
+            'second_interview' => $_POST['second_interview'],
+            'offer' => $_POST['offer'],
+            'job_id' => $_POST['job_id'],
+        
+        ];
+        $sql = 'UPDATE job SET 
+                    company_id=:company_id,
+                    company=:company, 
+                    job_title=:job_title, 
+                    job_category=:job_category, 
+                    city=:city, 
+                    state=:state, 
+                    contact=:contact, 
+                    referred_by=:referred_by, 
+                    date_applied=:date_applied, 
+                    status=:status, 
+                    phone_screen=:phone_screen, 
+                    first_interview=:first_interview, 
+                    second_interview=:second_interview, 
+                    offer=:offer
+                WHERE job_id=:job_id';
+        try{
+            $stmt= $pdo->prepare($sql);
+            $stmt->execute($data);
+            $job_id = $conn->lastInsertId();     
+        } catch (PDOException $e) {
+            $output = 'Unable to update Job' . $e;
+            echo $output;
+        }
+    }
+    
+    
 }
 
 switch($mode){
@@ -121,7 +191,7 @@ switch($mode){
 </head>
 
 <body>
-<form action="edit_job.php" name="job_form" method="post">   
+<form action="edit_job.php?mode=<?=$mode?>" name="job_form" method="post">   
 <table border=0>
     <?php 
     if($submitted == 'true'){
@@ -160,7 +230,7 @@ switch($mode){
             <table>
                 <tr>
                     <td><label for="new_company">New Company: </label></td>
-                    <td><input type="text" id="new_company"></td>
+                    <td><input type="text" name="new_company" id="new_company"></td>
                 </tr>
             </table>
             </div>
@@ -168,11 +238,11 @@ switch($mode){
     </tr>
     <tr>
         <td><label for="job_title">Job Title: </label></td>
-        <td><input type="text" id="job_title" size="40"  value="<?=$job_title?>"></td>
+        <td><input type="text" name="job_title" id="job_title" size="40"  value="<?=$job_title?>"></td>
     </tr>
     <tr>
         <td><label for="category">Job Cateogory: </label></td>
-        <td><select id="category">
+        <td><select name="category" id="category">
                 <option value="">Select Category</option>
                 <?php 
                 $sql = 'SELECT distinct job_category FROM job ORDER BY job_category';
@@ -190,11 +260,11 @@ switch($mode){
     </tr>
     <tr>
         <td><label for="city">City: </label></td>
-        <td><input type="text" id="city" value="<?=$city?>"></td>
+        <td><input type="text" name="city" id="city" value="<?=$city?>"></td>
     </tr>
     <tr>
         <td><label for="state">State: </label></td>
-        <td><select id="state">
+        <td><select name="state" id="state">
                 <option value="">Select State</option>
                 <?php 
                 $sql = 'SELECT state_id, state_name FROM States ORDER BY state_name';
@@ -212,35 +282,35 @@ switch($mode){
     </tr>
     <tr>
         <td><label for="referred_by">Referred By: </label></td>
-        <td><input type="text" id="referred_by" value="<?=$referred_by?>"></td>
+        <td><input type="text" name="referred_by" id="referred_by" value="<?=$referred_by?>"></td>
     </tr>
 
     <tr>
         <td><label for="contact">Contact: </label></td>
-        <td><input type="text" id="contact" value="<?=$contact?>"></td>
+        <td><input type="text" name="contact" id="contact" value="<?=$contact?>"></td>
     </tr>
     <tr>
         <td><label for="status">Status: </label></td>
-        <td><textarea rows="3" cols="35" id="status"><?=$status?></textarea></td>
+        <td><textarea rows="3" cols="35" name="status" id="status"><?=$status?></textarea></td>
     </tr>
     <tr>
         <td><label for="phone_screen">Phone Screen: </label></td>
-        <td><input type="text" id="phone_screen" name="datepicker" value="<?=$phone_screen?>" autocomplete="off"> 
+        <td><input type="text" name="phone_screen" id="phone_screen" name="datepicker" value="<?=$phone_screen?>" autocomplete="off"> 
         </td>
     </tr>
     <tr>
         <td><label for="first_interview">First Interview: </label></td>
-        <td><input type="text" id="first_interview" name="datepicker" value="<?=$first_interview?>" autocomplete="off"> 
+        <td><input type="text" name="first_interview" id="first_interview" name="datepicker" value="<?=$first_interview?>" autocomplete="off"> 
         </td>
     </tr>
     <tr>
         <td><label for="second_interview">Second Interview: </label></td>
-        <td><input type="text" id="second_interview" name="datepicker" value="<?=$second_interview?>" autocomplete="off"> 
+        <td><input type="text" name="second_interview" id="second_interview" name="datepicker" value="<?=$second_interview?>" autocomplete="off"> 
         </td>
     </tr>
     <tr>
         <td><label for="offer">Offer: </label></td>
-        <td><input type="text" id="offer" size=40 value="<?=$offer?>"> 
+        <td><input type="text" name="offer" id="offer" size=40 value="<?=$offer?>"> 
         </td>
     </tr>
     <tr>
@@ -248,8 +318,8 @@ switch($mode){
         <td align="center"><button id="back_button" onClick="window.history.go(-1);">Back to Report</button></td>
     </tr>
 </table> 
-<input type="hidden" id="job_id" value="<?=$job_id?>">
-<input type="hidden" id="submitted" value="true">
+<input type="hidden" name="job_id" id="job_id" value="<?=$job_id?>">
+<input type="hidden" name="submitted" value="true">
 </form>
 </body>
 </html>
