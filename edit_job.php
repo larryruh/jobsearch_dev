@@ -2,7 +2,7 @@
 $mode = $_GET['mode'];
 $job_id = $_GET['job_id'];
 $submitted = $_POST['submitted'];
-    
+
 try {
     $ini = parse_ini_file('app.ini');
     $pdo = new PDO($ini['db_conn_str'], $ini['db_user'], $ini['db_password']);
@@ -20,111 +20,74 @@ if($submitted == 'true'){
     
     //deal with new company
     if($_POST['company'] == 'new'){
-        $sql = "INSERT INTO company (company_name) VALUES (?)";
+        $company_name = $_POST['new_company'];
+        $sql = 'INSERT INTO company (company_name) VALUES ("'.$company_name.'")';
         try{
-            $stmt= $pdo->prepare($sql);
-            $stmt->execute([$new_company_name]);
-            $company_id = $pdo->lastInsertId();
-            $company_name = $_POST['new_company'];
+            $pdo->exec($sql);
+            $stmt = $pdo->prepare('SELECT max(company_id) from Company');
+            $stmt->execute();
+            $company_id = $stmt->fetchColumn();
         } catch (PDOException $e) {
              $output = 'Unable to update Company table ' . $e;
              echo $output;
         }
     } else {
-         //$company_id = $_POST['company_id']; //there is no company_id posted, dumbass! company id is in _post['company'];
          $company_id = $_POST['company'];
-         $sql = 'SELECT company_name FROM company WHERE company_id = '.$company_id.'ORDER BY company_name';
-         $company_list = $pdo->query($sql);
-         while ($row = $company_list->fetch()){
-            $company_name = row['company_name']; 
-         }
-        
-    }
-    
-    
-        
+        try{ 
+             $stmt = $pdo->prepare('SELECT company_name FROM company WHERE company_id = '.$company_id.' ORDER BY company_name');
+             $stmt->execute();
+             $company_name = $stmt->fetchColumn();
+        } catch (PDOException $e) {
+             $output = 'Unable to update Company table ' . $e;
+             echo $output;
+        }
+    }      
    
     if($mode == 'new'){
-        $data = [
-            'company_id' => $company_id,
-            'company' => $company_name,
-            'job_title' => $_POST['job_title'],
-            'job_category' => $_POST['category'],
-            'city' => $_POST['city'],
-            'state' => $_POST['state'],
-            'contact' => $_POST['contact'],
-            'referred_by' => $_POST['referred_by'],
-            'date_applied' => $_POST['date_applied'],
-            'status' => $_POST['status'],
-            'phone_screen' => $_POST['phone_screen'],
-            'first_interview' => $_POST['first_interview'],
-            'second_interview' => $_POST['second_interview'],
-            'offer' => $_POST['offer'],
-        ];
         $sql = 'INSERT INTO Job (company_id, company, job_title, job_category, city, state, contact, referred_by, date_applied, status, phone_screen, first_interview, second_interview, offer) 
-        VALUES(:company_id, :company_name, :job_title, :job_category, :city, :state, :contact, :referred_by, :date_applied, :status, :phone_screen, :first_interview, :second_interview, :offer)';
+        VALUES('.$company_id.', "'.$company_name.'", "'.$_POST['job_title'].'", "'.$_POST['job_category'].'", "'.$_POST['city'].'", "'.$_POST['state'].'", "'.$_POST['contact'].'", "'.$_POST['referred_by'].'", str_to_date("'.$_POST['date_applied'].'", "%m/%d/%Y"), "'.$_POST['status'].'", "'.$_POST['phone_screen'].'", "'.$_POST['first_interview'].'", "'.$_POST['second_interview'].'", "'.$_POST['offer'].'")';
         try{
-            $stmt= $pdo->prepare($sql);
-            $stmt->execute($data);
-            $job_id = $conn->lastInsertId();     
+           $pdo->exec($sql);
+           $stmt = $pdo->prepare('SELECT max(job_id) from job');
+           $stmt->execute();
+           $job_id = $stmt->fetchColumn();
         } catch (PDOException $e) {
             $output = 'Unable to update Job' . $e;
             echo $output;
         }
-        $mode = 'edit';
+        
     } else {
-        
-        $data = [
-            'company_id' => $company_id,
-            'company' => $company_name,
-            'job_title' => $_POST['job_title'],
-            'job_category' => $_POST['category'],
-            'city' => $_POST['city'],
-            'state' => $_POST['state'],
-            'contact' => $_POST['contact'],
-            'referred_by' => $_POST['referred_by'],
-            'date_applied' => $_POST['date_applied'],
-            'status' => $_POST['status'],
-            'phone_screen' => $_POST['phone_screen'],
-            'first_interview' => $_POST['first_interview'],
-            'second_interview' => $_POST['second_interview'],
-            'offer' => $_POST['offer'],
-            'job_id' => $_POST['job_id'],
-        
-        ];
+        $job_id = $_POST['job_id'];
         $sql = 'UPDATE job SET 
-                    company_id=:company_id,
-                    company=:company_name, 
-                    job_title=:job_title, 
-                    job_category=:job_category, 
-                    city=:city, 
-                    state=:state, 
-                    contact=:contact, 
-                    referred_by=:referred_by, 
-                    date_applied=:date_applied, 
-                    status=:status, 
-                    phone_screen=:phone_screen, 
-                    first_interview=:first_interview, 
-                    second_interview=:second_interview, 
-                    offer=:offer
-                WHERE job_id=:job_id';
+                    company_id='.$company_id.',
+                    company="'.$company_name.'", 
+                    job_title="'.$_POST['job_title'].'",
+                    job_category="'.$_POST['job_category'].'", 
+                    city="'.$_POST['city'].'",
+                    state="'.$_POST['state'].'",
+                    contact="'.$_POST['contact'].'",
+                    referred_by="'.$_POST['referred_by'].'",
+                    date_applied=str_to_date("'.$_POST['date_applied'].'", "%Y-%m-%D"),
+                    status="'.$_POST['status'].'",
+                    phone_screen="'.$_POST['phone_screen'].'",
+                    first_interview="'.$_POST['first_interview'].'",
+                    second_interview="'.$_POST['second_interview'].'", 
+                    offer="'.$_POST['offer'].'"
+                WHERE job_id='.$_POST['job_id'];
         try{
-            $stmt= $pdo->prepare($sql);
-            $stmt->execute($data);
-            $job_id = $conn->lastInsertId();     
+            $pdo->exec($sql);
         } catch (PDOException $e) {
             $output = 'Unable to update Job' . $e;
             echo $output;
         }
     }
-    
-    
+    $mode = 'edit';
 }
 
 switch($mode){
     case 'edit':
         $form_title = 'Edit Job Application';
-        $sql = 'SELECT job_id, company_id, company, job_title, job_category, city, state, contact, referred_by, date_applied, status, phone_screen, first_interview, second_interview, offer FROM job WHERE job_id = '.$job_id.';';
+        $sql = 'SELECT job_id, company_id, company, job_title, job_category, city, state, contact, referred_by, date_applied, status, phone_screen, first_interview, second_interview, offer FROM job WHERE job_id = '.$job_id;
         $job_detail = $pdo->query($sql);
         while ($row = $job_detail->fetch()){
             $company_id = $row['company_id'];
@@ -164,7 +127,6 @@ switch($mode){
     default:
 
 }
-
 ?>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 
@@ -174,8 +136,6 @@ switch($mode){
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script>
-       
-        //$q = jQuery.noConflict();  //this eliminates conflict between other libraries that may use $
         $(document).ready(function() { 
             $(function() {
                 $('#date_applied').datepicker();
@@ -208,7 +168,7 @@ switch($mode){
     </tr>
     <tr>
         <td><label for="datepicker">Date Applied: </label></td>
-        <td><input type="text" id="date_applied" name="datepicker" value="<?=$date_applied?>"> 
+        <td><input type="text" id="date_applied" name="date_applied" value="<?=$date_applied?>"> 
         </td>
     </tr>
     <tr>
@@ -248,7 +208,7 @@ switch($mode){
     </tr>
     <tr>
         <td><label for="category">Job Cateogory: </label></td>
-        <td><select name="category" id="category">
+        <td><select name="job_category" id="job_category">
                 <option value="">Select Category</option>
                 <?php 
                 $sql = 'SELECT distinct job_category FROM job ORDER BY job_category';
@@ -301,17 +261,17 @@ switch($mode){
     </tr>
     <tr>
         <td><label for="phone_screen">Phone Screen: </label></td>
-        <td><input type="text" name="phone_screen" id="phone_screen" name="datepicker" value="<?=$phone_screen?>" autocomplete="off"> 
+        <td><input type="text" name="phone_screen" id="phone_screen" value="<?=$phone_screen?>" autocomplete="off"> 
         </td>
     </tr>
     <tr>
         <td><label for="first_interview">First Interview: </label></td>
-        <td><input type="text" name="first_interview" id="first_interview" name="datepicker" value="<?=$first_interview?>" autocomplete="off"> 
+        <td><input type="text" name="first_interview" id="first_interview" value="<?=$first_interview?>" autocomplete="off"> 
         </td>
     </tr>
     <tr>
         <td><label for="second_interview">Second Interview: </label></td>
-        <td><input type="text" name="second_interview" id="second_interview" name="datepicker" value="<?=$second_interview?>" autocomplete="off"> 
+        <td><input type="text" name="second_interview" id="second_interview" value="<?=$second_interview?>" autocomplete="off"> 
         </td>
     </tr>
     <tr>
@@ -321,7 +281,7 @@ switch($mode){
     </tr>
     <tr>
         <td align="center"><input type="submit" value="Save"></td>
-        <td align="center"><button id="back_button" onClick="window.history.go(-1);">Back to Report</button></td>
+        <td align="center"></td>
     </tr>
 </table> 
 <input type="hidden" name="job_id" id="job_id" value="<?=$job_id?>">
