@@ -68,12 +68,16 @@ label{
   font-size: 15px;
   font-weight: bold;
   margin-top: 5px;
-  color: blue;
+  color: red;
 }
 .splash {
     align-content: center;
 }
-
+.error {
+    color: red;
+    font-size: 12;
+    font-weight: normal;
+}
 /* Applies to the element with <... id="someid"> specified. */
 #top_menu { 
     color: red; 

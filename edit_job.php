@@ -150,29 +150,87 @@ switch($mode){
                 else
                     $('#new_company_field').hide();
             });
-        });     
+            $('#job_form').submit (function(event){
+                var nameReg = /^[A-Za-z]+$/;
+                var numberReg =  /^[0-9]+$/;
+                var emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
+                var dateReg = /^(?=\d)(?:(?:31(?!.(?:0?[2469]|11))|(?:30|29)(?!.0?2)|29(?=.0?2.(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00)))(?:\x20|$))|(?:2[0-8]|1\d|0?[1-9]))([-.\/])(?:1[012]|0?[1-9])\1(?:1[6-9]|[2-9]\d)?\d\d(?:(?=\x20\d)\x20|$))?(((0?[1-9]|1[012])(:[0-5]\d){0,2}(\x20[AP]M))|([01]\d|2[0-3])(:[0-5]\d){1,2})?$/;
+
+                var date_applied = $('#date_applied').val();
+                var company = $('#company  option:selected').val();
+                var job_title = $('#job_title').val();
+                var job_category = $('#job_category option:selected').val();
+                var city = $('#city').val();
+                var state = $('#state option:selected').val();
+                var valid_form = true;
+
+                var inputVal = new Array(date_applied, company, job_title, job_category, city, state);
+
+                var inputMessage = new Array('Date Applied', 'Company', 'Job Title', 'Job Category', 'City', 'State');
+
+                 $('.error').hide();
+
+                if(inputVal[0] == ""){
+                    $('#date_applied_label').after('<span class="error"> Please enter the ' + inputMessage[0] + '</span>');
+                    valid_form = false;
+                } 
+                else if(!dateReg.test(date_applied)){
+                    $('#date_applied_label').after('<span class="error"> Date format (mm/dd/yyyy)</span>');
+                    valid_form = false;
+                }
+
+                if(inputVal[1] == ""){
+                    $('#company_label').after('<span class="error"> Please select a ' + inputMessage[1] + '</span>');
+                    valid_form = false;
+                }
+
+                if(inputVal[2] == ""){
+                    $('#job_title_label').after('<span class="error"> Please enter your ' + inputMessage[2] + '</span>');
+                    valid_form = false;
+                } 
+
+                if(inputVal[3] == ""){
+                    $('#job_category_label').after('<span class="error"> Please enter the ' + inputMessage[3] + '</span>');
+                    valid_form = false;
+                } 
+
+                if(inputVal[4] == ""){
+                    $('#city_label').after('<span class="error"> Please enter the ' + inputMessage[4] + '</span>');
+                    valid_form = false;
+                }    
+
+                if(inputVal[5] == ""){
+                    $('#state_label').after('<span class="error"> Please enter the ' + inputMessage[5] + '</span>');
+                    valid_form = false;
+                }   
+
+                if(valid_form == false)
+                   event.preventDefault();
+            });
+        }); 
+        
     </script>
     <meta charset="utf-8" />
     <title></title>
 </head>
 
 <body>
-<form action="edit_job.php?mode=<?=$mode?>" name="job_form" method="post">   
+<form action="edit_job.php?mode=<?=$mode?>" id="job_form" name="job_form" method="post">   
 <table border=0>
     <?php 
     if($submitted == 'true'){
-        echo '<p class="notification">Application Updated</p>';
+        echo '<p><div class="notification">Application Updated</div></p>';
     }?>
     <tr>
         <td colspan=8 class="report_title"><?=$form_title?></td>
     </tr>
     <tr>
-        <td><label for="datepicker">Date Applied: </label></td>
-        <td><input type="text" id="date_applied" name="date_applied" value="<?=$date_applied?>"> 
+        <td><label id="date_applied_label" for="date_applied">Date Applied: </label></td>
+        <td><input type="text" id="date_applied" name="date_applied" value="<?=$date_applied?>"> *
         </td>
     </tr>
     <tr>
-        <td><label for="company">Company: </label></td>
+        <td><label id="company_label" for="company">Company: </label></td>
         <td><select name="company" id="company">
                 <option value="">Select Company</option>
                 <option value="new">--NEW COMPANY--</option>
@@ -187,7 +245,7 @@ switch($mode){
                     } 
                     echo '<option value="'.$row['company_id'].'"'.$filter_selected.'>'.$row['company_name'].'</option>';
                 }?>
-            </select> 
+            </select> *
         </td>
     </tr>
     <tr>
@@ -203,11 +261,11 @@ switch($mode){
         </td>
     </tr>
     <tr>
-        <td><label for="job_title">Job Title: </label></td>
-        <td><input type="text" name="job_title" id="job_title" size="40"  value="<?=$job_title?>"></td>
+        <td><label id="job_title_label" for="job_title">Job Title: </label></td>
+        <td><input type="text" name="job_title" id="job_title" size="40"  value="<?=$job_title?>"> *</td>
     </tr>
     <tr>
-        <td><label for="category">Job Cateogory: </label></td>
+        <td><label id="job_category_label" for="category">Job Category: </label></td>
         <td><select name="job_category" id="job_category">
                 <option value="">Select Category</option>
                 <?php 
@@ -221,15 +279,15 @@ switch($mode){
                     } 
                     echo '<option value="'.$row['job_category'].'"'.$filter_selected.'>'.$row['job_category'].'</option>';
                 }?>
-            </select> 
+            </select> *
         </td>
     </tr>
     <tr>
-        <td><label for="city">City: </label></td>
-        <td><input type="text" name="city" id="city" value="<?=$city?>"></td>
+        <td><label id="city_label" for="city">City: </label></td>
+        <td><input type="text" name="city" id="city" value="<?=$city?>"> *</td>
     </tr>
     <tr>
-        <td><label for="state">State: </label></td>
+        <td><label id="state_label" for="state">State: </label></td>
         <td><select name="state" id="state">
                 <option value="">Select State</option>
                 <?php 
@@ -243,7 +301,7 @@ switch($mode){
                     } 
                     echo '<option value="'.$row['state_id'].'"'.$filter_selected.'>'.$row['state_name'].'</option>';
                 }?>
-            </select> 
+            </select> *
         </td>
     </tr>
     <tr>
@@ -280,7 +338,7 @@ switch($mode){
         </td>
     </tr>
     <tr>
-        <td align="center"><input type="submit" value="Save"></td>
+        <td align="center"><button id="submit_form">Save</button></td>
         <td align="center"></td>
     </tr>
 </table> 
