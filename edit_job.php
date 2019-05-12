@@ -161,7 +161,7 @@ switch($mode){
 <table border=0>
     <?php 
     if($submitted == 'true'){
-        echo '<h1 class="notification">Application Updated</h1>';
+        echo '<p class="notification">Application Updated</p>';
     }?>
     <tr>
         <td colspan=8 class="report_title"><?=$form_title?></td>

@@ -1,1 +1,15 @@
-﻿<!DOCTYPE html><html lang="en" xmlns="http://www.w3.org/1999/xhtml"><head>    <meta charset="utf-8" />    <title></title>    <script language=javascript>        //alert("i'm here");        function hideImage(){            element = document.getElementById("imageHide");            buttonele = document.getElementById("hidebutton")            //alert(element.style.display);            if(element.style.display!="none"){                element.style.display="none";                buttonele.value="Show Image";            }            else{                element.style.display="block";                buttonele.value="Hide Image";            }        }    </script></head><body><div id=imageHide><img src="/img/workingman.jpg" alt="Working Man"></div><input id=hidebutton type=button value="Hide Image" onClick="hideImage()">    </body></html>
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+<body>
+
+<img class="splash" height="600px" width="800px" src="/img/splash.png" alt="Working Man">
+
+
+    
+</body>
+</html>

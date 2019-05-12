@@ -6,19 +6,6 @@
     <link rel=stylesheet type="text/css" href="jobsearch.css">
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
     <script>
-        /*$('#app_expand').on({
-            'click': function() {
-                 var src = ($(this).attr('src') === 'img/collapse.png')
-                    ? 'expand.png'
-                    : 'collapse.png';
-                 $(this).attr('src', src);
-            }
-        });*/
-        $('#app_link').on({
-            'click': function(){
-                $('#app_expand').attr('src','img/collapse.png');
-            }
-        });
         function hideMenu(header){
             element = document.getElementById(header);
             if(element.style.display!="none"){
@@ -29,17 +16,28 @@
             }
         }
     </script>
+    <script>
+        $(document).ready(function() { 
+            $('#app_link').click(function(){
+                if($('#app_expand').attr('src') == 'img/expand.png'){
+                    $('#app_expand').attr('src','img/collapse.png');
+                } else {
+                    $('#app_expand').attr('src','img/expand.png');
+                }
+            });
+        });
+    </script>
     <meta charset="utf-8" />
     <title>Jobsearch Menu</title>
 </head>
 
 <body>
-    <img id="workingman" width="150" height="150" src="img/workingman.jpg" alt="Get a Job!" />
+    <a href="searchResults.php" target="results_frame"><img id="workingman" width="150" height="150" src="img/workingman.jpg" alt="Get a Job!" /></a>
     <h1>Job Search HQ</h1>
     <table border="0">
         <tr>
             <td>
-                <a href="javascript:hideMenu('app_sub_menu')" id="app_link"><div class="top_menu"><img id="app_expand" src="img/expand.png" height="10" width="10"> Job Applications</div></a>
+                <a href="javascript:hideMenu('app_sub_menu')" id="app_link"><div class="top_menu"><img id="app_expand" src="img/expand.png" height="10" width="10">Job Applications</div></a>
             </td>
         </tr>   
     </table>
@@ -47,8 +45,8 @@
     <table border=0>   
         <tr>
             <td>
-                 <a href="application_list.php" target="results_frame">Search</a><br>
-                <a href="edit_job.php?mode=new" target="results_frame">Add New</a>
+                 <a href="application_list.php" target="results_frame">&nbsp;&nbsp;&nbsp;Search</a><br>
+                <a href="edit_job.php?mode=new" target="results_frame">&nbsp;&nbsp;&nbsp;Add New</a>
             </td>
         </tr>
     </table>

@@ -65,10 +65,13 @@ label{
 
 }
 .notification {
-  font-size: 30px;
+  font-size: 15px;
   font-weight: bold;
   margin-top: 5px;
-  color: red;
+  color: blue;
+}
+.splash {
+    align-content: center;
 }
 
 /* Applies to the element with <... id="someid"> specified. */

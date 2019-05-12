@@ -31,23 +31,28 @@ try {
     <link rel=stylesheet type="text/css" href="jobsearch.css">
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
     <script>
-        $q = jQuery.noConflict();  //this eliminates conflict between other libraries that may use $
-        $q(document).ready(function() {  
-            $q("#company_filter").change(function () {   //event handler for filter dropdown select inputs
+        //$q = jQuery.noConflict();  //this eliminates conflict between other libraries that may use $
+        $(document).ready(function() {  
+            $("#company_filter").change(function () {   //event handler for filter dropdown select inputs
                 window.location.href="application_list.php?field=company_id&filter=" + company_filter.value;
             })
-            $q("#category_filter").change(function () {   
+            $("#category_filter").change(function () {   
                 window.location.href="application_list.php?field=job_category&filter=" + category_filter.value;
             })
-            $q("#city_filter").change(function () {   
+            $("#city_filter").change(function () {   
                 window.location.href="application_list.php?field=city&filter=" + city_filter.value;
             })
-            $q("#state_filter").change(function () {   
+            $("#state_filter").change(function () {   
                 window.location.href="application_list.php?field=state&filter=" + state_filter.value;
             })
             //$q("#interview_filter").change(function () {   
             //    window.location.href="application_list.php?//field=phone_screen&filter=" + interview_filter.value;
             //})
+            $(function() {
+                var rows = $('.report_detail');
+                rows.filter(":even").css("background", "azure");
+                rows.filter(":odd").css("background", "white");
+            });
         })
         function hideMenu(header){
             element = document.getElementById(header);
