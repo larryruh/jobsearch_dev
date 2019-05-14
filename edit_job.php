@@ -171,36 +171,36 @@ switch($mode){
                  $('.error').hide();
 
                 if(inputVal[0] == ""){
-                    $('#date_applied_label').after('<span class="error"> Please enter the ' + inputMessage[0] + '</span>');
+                    $('#date_applied').after('<span class="error"> Please enter the ' + inputMessage[0] + '</span>');
                     valid_form = false;
                 } 
                 else if(!dateReg.test(date_applied)){
-                    $('#date_applied_label').after('<span class="error"> Date format (mm/dd/yyyy)</span>');
+                    $('#date_applied').after('<span class="error"> Date format (mm/dd/yyyy)</span>');
                     valid_form = false;
                 }
 
                 if(inputVal[1] == ""){
-                    $('#company_label').after('<span class="error"> Please select a ' + inputMessage[1] + '</span>');
+                    $('#company').after('<span class="error"> Please select a ' + inputMessage[1] + '</span>');
                     valid_form = false;
                 }
 
                 if(inputVal[2] == ""){
-                    $('#job_title_label').after('<span class="error"> Please enter your ' + inputMessage[2] + '</span>');
+                    $('#job_title').after('<span class="error"> Please enter your ' + inputMessage[2] + '</span>');
                     valid_form = false;
                 } 
 
                 if(inputVal[3] == ""){
-                    $('#job_category_label').after('<span class="error"> Please enter the ' + inputMessage[3] + '</span>');
+                    $('#job_category').after('<span class="error"> Please enter the ' + inputMessage[3] + '</span>');
                     valid_form = false;
                 } 
 
                 if(inputVal[4] == ""){
-                    $('#city_label').after('<span class="error"> Please enter the ' + inputMessage[4] + '</span>');
+                    $('#city').after('<span class="error"> Please enter the ' + inputMessage[4] + '</span>');
                     valid_form = false;
                 }    
 
                 if(inputVal[5] == ""){
-                    $('#state_label').after('<span class="error"> Please enter the ' + inputMessage[5] + '</span>');
+                    $('#state').after('<span class="error"> Please enter the ' + inputMessage[5] + '</span>');
                     valid_form = false;
                 }   
 

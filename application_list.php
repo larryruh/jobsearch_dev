@@ -71,7 +71,7 @@ try {
 <body>
 <table border=0>
     <tr>
-        <td colspan=8 class="report_title" cel>Jobs I've Applied For</td>
+        <td colspan=8 class="report_title">Jobs I've Applied For</td>
     </tr>
     <tr>
         <td></td>
@@ -153,7 +153,7 @@ try {
             echo '<option value="Yes">Yes</option>';
             echo '<option value="No">No</option>';
             echo '</select></td>'; 
-        echo '<tr>';
+        echo '</tr>';
         
         
         $result = $pdo->query($report_sql);

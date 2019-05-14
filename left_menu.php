@@ -25,6 +25,20 @@
                     $('#app_expand').attr('src','img/expand.png');
                 }
             });
+            $('#rec_link').click(function(){
+                if($('#rec_expand').attr('src') == 'img/expand.png'){
+                    $('#rec_expand').attr('src','img/collapse.png');
+                } else {
+                    $('#rec_expand').attr('src','img/expand.png');
+                }
+            });
+            $('#com_link').click(function(){
+                if($('#company_expand').attr('src') == 'img/expand.png'){
+                    $('#company_expand').attr('src','img/collapse.png');
+                } else {
+                    $('#company_expand').attr('src','img/expand.png');
+                }
+            });
         });
     </script>
     <meta charset="utf-8" />
@@ -54,7 +68,7 @@
     <table border="0">
         <tr>
             <td>
-                <a href="javascript:hideMenu('rec_sub_menu')"><div class="top_menu"><img id="rec_expand" src="img/expand.png" height="10" width="10"> Recruiters</div></a>
+                <a href="javascript:hideMenu('rec_sub_menu')" id="rec_link"><div class="top_menu"><img id="rec_expand" src="img/expand.png" height="10" width="10"> Recruiters</div></a>
             </td>
         </tr>   
     </table>
@@ -62,8 +76,8 @@
     <table border=0>   
         <tr>
             <td>
-                 <a href="application_list.php" target="results_frame">Search</a><br>
-                <a href="application_edit.php?mode=new" target="results_frame">Add New</a>
+                 <a href="recruiter_list.php" target="results_frame">&nbsp;&nbsp;&nbsp;Search</a><br>
+                <a href="edit_recruiter.php?mode=new" target="results_frame">&nbsp;&nbsp;&nbsp;Add New</a>
             </td>
         </tr>
     </table>
@@ -71,7 +85,7 @@
     <table border="0">
         <tr>
             <td>
-                <a href="javascript:hideMenu('com_sub_menu')"><div class="top_menu"><img id="company_expand" src="img/expand.png" height="10" width="10"> Companies to Watch</div></a>
+                <a href="javascript:hideMenu('com_sub_menu')" id="com_link"><div class="top_menu"><img id="company_expand" src="img/expand.png" height="10" width="10"> Companies to Watch</div></a>
             </td>
         </tr>   
     </table>
@@ -79,8 +93,8 @@
     <table border=0>   
         <tr>
             <td>
-                 <a href="application_list.php" target="results_frame">Search</a><br>
-                <a href="application_edit.php?mode=new" target="results_frame">Add New</a>
+                 <a href="company_list.php" target="results_frame">Search</a><br>
+                <a href="company_edit.php?mode=new" target="results_frame">Add New</a>
             </td>
         </tr>
     </table>
