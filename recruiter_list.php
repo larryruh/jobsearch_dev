@@ -18,7 +18,6 @@ try {
 }
 
 if($_GET['mode'] == 'delete'){
-    $form_title = 'Edit Recruiter Information';
     $sql = 'DELETE FROM recruiter WHERE recruiter_id = '.$_GET['recruiter_id'];
     try{
        $pdo->exec($sql);
@@ -70,16 +69,7 @@ $report_sql = 'SELECT recruiter_id, company, first_name, last_name, phone, email
                     return false;
                 }
             });
-        })
-        function hideMenu(header){
-            element = document.getElementById(header);
-            if(element.style.display!="none"){
-                element.style.display="none";
-            }
-            else{
-                element.style.display="block";
-            }
-        }
+        });
     </script>
     <meta charset="utf-8" />
     <title></title>

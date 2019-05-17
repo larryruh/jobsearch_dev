@@ -94,7 +94,7 @@
         <tr>
             <td>
                  <a href="company_list.php" target="results_frame">Search</a><br>
-                <a href="company_edit.php?mode=new" target="results_frame">Add New</a>
+                <a href="edit_company.php?mode=new" target="results_frame">Add New</a>
             </td>
         </tr>
     </table>

@@ -44,8 +44,8 @@ if($submitted == 'true'){
     }      
    
     if($mode == 'new'){
-        $sql = 'INSERT INTO Job (company_id, company, job_title, job_category, city, state, contact, referred_by, date_applied, status, phone_screen, first_interview, second_interview, offer) 
-        VALUES('.$company_id.', "'.$company_name.'", "'.$_POST['job_title'].'", "'.$_POST['job_category'].'", "'.$_POST['city'].'", "'.$_POST['state'].'", "'.$_POST['contact'].'", "'.$_POST['referred_by'].'", str_to_date("'.$_POST['date_applied'].'", "%m/%d/%Y"), "'.$_POST['status'].'", "'.$_POST['phone_screen'].'", "'.$_POST['first_interview'].'", "'.$_POST['second_interview'].'", "'.$_POST['offer'].'")';
+        $sql = 'INSERT INTO Job (company_id, company, job_title, job_category, city, state, contact, referred_by, date_applied, status, notes, phone_screen, first_interview, second_interview, offer) 
+        VALUES('.$company_id.', "'.$company_name.'", "'.$_POST['job_title'].'", "'.$_POST['job_category'].'", "'.$_POST['city'].'", "'.$_POST['state'].'", "'.$_POST['contact'].'", "'.$_POST['referred_by'].'", str_to_date("'.$_POST['date_applied'].'", "%m/%d/%Y"), "'.$_POST['status'].'", "'.$_POST['phone_screen'].'", "'.$_POST['notes'].'", "'.$_POST['first_interview'].'", "'.$_POST['second_interview'].'", "'.$_POST['offer'].'")';
         try{
            $pdo->exec($sql);
            $stmt = $pdo->prepare('SELECT max(job_id) from job');
@@ -69,6 +69,7 @@ if($submitted == 'true'){
                     referred_by="'.$_POST['referred_by'].'",
                     date_applied=str_to_date("'.$_POST['date_applied'].'", "%Y-%m-%D"),
                     status="'.$_POST['status'].'",
+                    notes="'.$_POST['notes'].'",
                     phone_screen="'.$_POST['phone_screen'].'",
                     first_interview="'.$_POST['first_interview'].'",
                     second_interview="'.$_POST['second_interview'].'", 
@@ -87,7 +88,7 @@ if($submitted == 'true'){
 switch($mode){
     case 'edit':
         $form_title = 'Edit Job Application';
-        $sql = 'SELECT job_id, company_id, company, job_title, job_category, city, state, contact, referred_by, date_applied, status, phone_screen, first_interview, second_interview, offer FROM job WHERE job_id = '.$job_id;
+        $sql = 'SELECT job_id, company_id, company, job_title, job_category, city, state, contact, referred_by, date_applied, status, notes, phone_screen, first_interview, second_interview, offer FROM job WHERE job_id = '.$job_id;
         $job_detail = $pdo->query($sql);
         while ($row = $job_detail->fetch()){
             $company_id = $row['company_id'];
@@ -100,6 +101,7 @@ switch($mode){
             $referred_by = $row['referred_by'];
             $date_applied = $row['date_applied'];
             $status = $row['status'];
+            $notes = $row['notes'];
             $phone_screen = $row['phone_screen'];
             $first_interview = $row['first_interview'];
             $second_interview = $row['second_interview'];
@@ -118,6 +120,7 @@ switch($mode){
         $referred_by = '';
         $date_applied = '';
         $status = '';
+        $notes = '';
         $phone_screen = '';
         $first_interview = '';
         $second_interview = '';
@@ -162,11 +165,12 @@ switch($mode){
                 var job_category = $('#job_category option:selected').val();
                 var city = $('#city').val();
                 var state = $('#state option:selected').val();
+                var status = $('#status option:selected').val();
                 var valid_form = true;
 
-                var inputVal = new Array(date_applied, company, job_title, job_category, city, state);
+                var inputVal = new Array(date_applied, company, job_title, job_category, city, state, status);
 
-                var inputMessage = new Array('Date Applied', 'Company', 'Job Title', 'Job Category', 'City', 'State');
+                var inputMessage = new Array('Date Applied', 'Company', 'Job Title', 'Job Category', 'City', 'State', 'Status');
 
                  $('.error').hide();
 
@@ -201,8 +205,13 @@ switch($mode){
 
                 if(inputVal[5] == ""){
                     $('#state').after('<span class="error"> Please enter the ' + inputMessage[5] + '</span>');
+                    valid_form = false;  
+                } 
+                
+                if(inputVal[6] == ""){
+                    $('#status').after('<span class="error"> Please enter the ' + inputMessage[6] + '</span>');
                     valid_form = false;
-                }   
+                }     
 
                 if(valid_form == false)
                    event.preventDefault();
@@ -314,8 +323,18 @@ switch($mode){
         <td><input type="text" name="contact" id="contact" value="<?=$contact?>"></td>
     </tr>
     <tr>
-        <td><label for="status">Status: </label></td>
-        <td><textarea rows="3" cols="35" name="status" id="status"><?=$status?></textarea></td>
+        <td><label id="status_label" for="status">Status: </label></td>
+        <td><select name="status" id="status">
+            <option value="">Select Status</option>
+            <option value="Applied" <?php if($status=='Applied'){ echo ' Selected ';}?>>Applied</option>
+            <option value="Closed" <?php if ($status=='Closed'){ echo ' Selected ';} ?>>Closed</option>
+            <option value="Pending" <?php if ($status=='Pending'){ echo ' Selected ';}?>>Pending</option>
+            </select> *
+        </td>
+    </tr>
+    <tr>
+        <td><label for="notes">Notes: </label></td>
+        <td><textarea rows="3" cols="35" name="notes" id="notes"><?=$notes?></textarea></td>
     </tr>
     <tr>
         <td><label for="phone_screen">Phone Screen: </label></td>

@@ -45,6 +45,9 @@ try {
             $("#state_filter").change(function () {   
                 window.location.href="application_list.php?field=state&filter=" + state_filter.value;
             })
+            $("#status_filter").change(function () {   
+                window.location.href="application_list.php?field=status&filter=" + status_filter.value;
+            })
             //$q("#interview_filter").change(function () {   
             //    window.location.href="application_list.php?//field=phone_screen&filter=" + interview_filter.value;
             //})
@@ -146,7 +149,13 @@ try {
              }
         echo '</select></td>';
         echo '<td></td>';
-        echo '<td></td>';
+        //Status Filter
+        echo '<td><select id="status_filter">';
+        echo '<option value="">--All--</option>';
+        echo    '<option value="Applied">Applied</option>';
+        echo    '<option value="Closed">Closed</option>';
+        echo    '<option value="Pending">Pending</option>';
+        echo '</select></td>';
         //Interview Filter
         echo '<td><select id="interview_filter">';
             echo '<option value="">--All--</option>';

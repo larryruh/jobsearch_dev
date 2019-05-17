@@ -18,29 +18,26 @@ try {
 }
 
 if($_GET['mode'] == 'delete'){
-    $form_title = 'Edit Recruiter Information';
-    $sql = 'DELETE FROM recruiter WHERE recruiter_id = '.$_GET['recruiter_id'];
+    $sql = 'DELETE FROM company_watch WHERE company_id = '.$_GET['company_id'];
     try{
        $pdo->exec($sql);
-       $recruiter_deleted = 'Recruiter Deleted';
+       $company_deleted = 'Company Deleted';
     } catch (PDOException $e) {
-       $recruiter_deleted = 'Unable to Delete Recruiter' . $e;
+       $company_deleted = 'Unable to Delete Company' . $e;
     } 
 }
          
-if ($query_filter_field == 'locations'){
+if ($query_filter_field == 'location'){
     $where_statement = 'WHERE '. $query_filter_field . ' like "%' . $query_filter. '%" ';
 } else if ($query_filter != ''){
     $where_statement = 'WHERE '. $query_filter_field . ' = "' . $query_filter. '" ';
 }
 if ($query_sort == ''){
-    $query_sort = 'last_name';
+    $query_sort = 'company_name';
 }
-$report_sql = 'SELECT recruiter_id, company, first_name, last_name, phone, email, locations, notes FROM recruiter  ' . $where_statement . 'ORDER BY ' . $query_sort . ';';
-
-
-
+$report_sql = 'SELECT company_id, company_name, location, contact, email, phone, relationship_notes, last_jobs_check FROM company_watch  ' . $where_statement . 'ORDER BY ' . $query_sort . ';';
 ?>
+
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
@@ -49,14 +46,12 @@ $report_sql = 'SELECT recruiter_id, company, first_name, last_name, phone, email
     <script>
         //$q = jQuery.noConflict();  //this eliminates conflict between other libraries that may use $
         $(document).ready(function() {  
-            $("#last_name_filter").change(function () {   //event handler for filter dropdown select inputs
-                window.location.href="recruiter_list.php?field=last_name&filter=" + last_name_filter.value;
+            //event handler for filter dropdown select inputs
+            $("#company_filter").change(function () {   
+                window.location.href="company_list.php?field=company_name&filter=" + company_filter.value;
             })
-             $("#company_filter").change(function () {   
-                window.location.href="recruiter_list.php?field=company&filter=" + company_filter.value;
-            })
-            $("#location_filter").change(function () {   
-                window.location.href="recruiter_list.php?field=locations&filter=" + location_filter.value;
+             $("#location_filter").change(function () {   
+                window.location.href="company_list.php?field=location&filter=" + location_filter.value;
             })
             $(function() {
                 var rows = $('.report_detail');
@@ -64,32 +59,23 @@ $report_sql = 'SELECT recruiter_id, company, first_name, last_name, phone, email
                 rows.filter(":odd").css("background", "white");
             });
             $('.delete').click(function(){
-                if(confirm('Are you sure you want to delete this recruiter?')){
+                if(confirm('Are you sure you want to delete this company?')){
                     return;
                 } else {
                     return false;
                 }
             });
-        })
-        function hideMenu(header){
-            element = document.getElementById(header);
-            if(element.style.display!="none"){
-                element.style.display="none";
-            }
-            else{
-                element.style.display="block";
-            }
-        }
+        });
     </script>
     <meta charset="utf-8" />
     <title></title>
 </head>
 
 <body>
-<p><div class="notification"><?=$recruiter_deleted?></div>
+<p><div class="notification"><?=$company_deleted?></div>
 <table border=0>
     <tr>
-        <td colspan=8 class="report_title">Recruiters I Know</td>
+        <td colspan=8 class="report_title">Companies I'm Watching</td>
     </tr>
     <tr>
         <td></td>
@@ -97,49 +83,32 @@ $report_sql = 'SELECT recruiter_id, company, first_name, last_name, phone, email
     <tr>
         <td class="report_header" nowrap></td>
         <td class="report_header" nowrap></td>
-        <td class="report_header" nowrap>First Name</td>
-        <td class="report_header" nowrap>Last Name</td>
         <td class="report_header" nowrap>Company</td>
+        <td class="report_header" nowrap>Location</td>
+        <td class="report_header" nowrap>Contact</td>
         <td class="report_header" nowrap>Phone</td>
         <td class="report_header" nowrap>Email</td>
-        <td class="report_header" nowrap>Locations</td>
         <td class="report_header" nowrap>Notes</td>
+        <td class="report_header" nowrap>Last Jobs Check</td>
     </tr>
     <?php
         echo '<tr>';
         echo '<td></td>';
         echo '<td></td>';
-        echo '<td></td>';
-        //Last Name Filter
-        echo '<td><select id="last_name_filter">';
-        echo '<option value="">--All--</option>';
-            $sql = 'SELECT distinct last_name FROM recruiter ORDER BY last_name';
-            $last_name_list = $pdo->query($sql);
-            while ($row = $last_name_list->fetch()) {   
-                if($query_filter == $row['last_name']){
-                    $filter_selected = ' Selected ';
-                } else {
-                    $filter_selected = '';
-                }
-                echo '<option value="'.$row['last_name'].'"'.$filter_selected.' >'.$row['last_name'].'</option>';
-             }
-             echo '</select></td>';
         //Company Filter
         echo '<td><select id="company_filter">';
         echo '<option value="">--All--</option>';
-            $sql = 'SELECT distinct company FROM recruiter ORDER BY company';
+            $sql = 'SELECT distinct company_name FROM company_watch ORDER BY company_name';
             $company_list = $pdo->query($sql);
             while ($row = $company_list->fetch()) {   
-                if($query_filter == $row['company']){
+                if($query_filter == $row['company_name']){
                     $filter_selected = ' Selected ';
                 } else {
                     $filter_selected = '';
                 }
-                echo '<option value="'.$row['company'].'"'.$filter_selected.' >'.$row['company'].'</option>';
+                echo '<option value="'.$row['company_name'].'"'.$filter_selected.' >'.$row['company_name'].'</option>';
              }
              echo '</select></td>';
-        echo '<td></td>';
-        echo '<td></td>';
         //Location Filter
         echo '<td><select id="location_filter">';
         echo '<option value="">--All--</option>';
@@ -155,21 +124,24 @@ $report_sql = 'SELECT recruiter_id, company, first_name, last_name, phone, email
              }
         echo '</select></td>';
         echo '<td></td>';
+        echo '<td></td>';
+        echo '<td></td>';
+        echo '<td></td>';
         echo '</tr>';
         
         
         $result = $pdo->query($report_sql);
         while ($row = $result->fetch()) { 
             echo '<tr class="report_detail">';
-            echo '<td><a href="recruiter_list.php?mode=delete&recruiter_id='.$row['recruiter_id'] .'"><img src="img/delete.png" class="delete" height=12 width=12 alt="Delete Recruiter"></a></td>';
-            echo '<td><a href="edit_recruiter.php?mode=edit&recruiter_id='.$row['recruiter_id'] .'"><img src="img/edit_pencil.jpg" height=12 width=12 alt="Edit Recruiter"></a></td>';
-            echo '<td>'.$row['first_name'].'</td>';
-            echo '<td>'.$row['last_name'].'</td>';
-            echo '<td>'.$row['company'].'</td>';
+            echo '<td><a href="company_list.php?mode=delete&company_id='.$row['company_id'] .'"><img src="img/delete.png" class="delete" height=12 width=12 alt="Delete Company"></a></td>';
+            echo '<td><a href="edit_Company.php?mode=edit&company_id='.$row['company_id'] .'"><img src="img/edit_pencil.jpg" height=12 width=12 alt="Edit Company"></a></td>';
+            echo '<td>'.$row['company_name'].'</td>';
+            echo '<td>'.$row['location'].'</td>';
+            echo '<td nowrap>'.$row['contact'].'</td>';
             echo '<td>'.$row['phone'].'</td>';
             echo '<td>'.$row['email'].'</td>';
-            echo '<td>'.$row['locations'].'</td>';
-            echo '<td>'.$row['notes'].'</td>';
+            echo '<td>'.$row['relationship_notes'].'</td>';
+            echo '<td>'.$row['last_jobs_check'].'</td>';
             echo '</tr>';   
 
         }

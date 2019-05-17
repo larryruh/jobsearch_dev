@@ -111,13 +111,11 @@ switch($mode){
                 var first_name = $('#first_name').val();
                 var last_name = $('#last_name').val();
                 var company = $('#company  option:selected').val();
-                var phone = $('#phone').val();
-                var email = $('#email').val();
                 var valid_form = true;
 
-                var inputVal = new Array(first_name, last_name, company, phone, email);
+                var inputVal = new Array(first_name, last_name, company);
 
-                var inputMessage = new Array('First Name', 'Last Name', 'Company', 'Phone Number', 'Email Address');
+                var inputMessage = new Array('First Name', 'Last Name', 'Company');
 
                  $('.error').hide();
 
@@ -133,17 +131,7 @@ switch($mode){
                     $('#company').after('<span class="error"> Please select a ' + inputMessage[2] + '</span>');
                     valid_form = false;
                 }
-                if(inputVal[3] == ""){
-                    $('#phone').after('<span class="error"> Please enter the ' + inputMessage[3] + '</span>');
-                    valid_form = false;
-                } 
-                if(inputVal[4] == ""){
-                    $('#email').after('<span class="error"> Please enter the ' + inputMessage[4] + '</span>');
-                    valid_form = false;
-                }  else if(!emailReg.test(email)){
-                    $('#email').after('<span class="error"> Plaease enter a valid email adreess</span>');
-                    valid_form = false;
-                }
+             
                 if(valid_form == false)
                    event.preventDefault();
             });
@@ -207,11 +195,11 @@ if($submitted == 'true'){
     </tr>
     <tr>
         <td><label id="phone_label" for="phone">Phone: </label></td>
-        <td><input type="text" name="phone" id="phone" size="40"  value="<?=$phone?>"> *</td>
+        <td><input type="text" name="phone" id="phone" size="40"  value="<?=$phone?>"></td>
     </tr>
     <tr>
         <td><label id="email_label" for="email">Email: </label></td>
-        <td><input type="text" name="email" id="email" size="40"  value="<?=$email?>"> *</td>
+        <td><input type="text" name="email" id="email" size="40"  value="<?=$email?>"></td>
     </tr>
     <tr>
         <td><label id="locations_label" for="locations">Locations: </label></td>
