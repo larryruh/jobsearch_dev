@@ -7,7 +7,7 @@
 </head>
 <body>
 
-<img class="splash" height="600px" width="800px" src="/img/splash.png" alt="Working Man">
+<img class="splash" height="600px" width="800px" src="img/splash.png" alt="Working Man">
 
 
     
