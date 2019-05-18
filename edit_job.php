@@ -67,7 +67,7 @@ if($submitted == 'true'){
                     state="'.$_POST['state'].'",
                     contact="'.$_POST['contact'].'",
                     referred_by="'.$_POST['referred_by'].'",
-                    date_applied=str_to_date("'.$_POST['date_applied'].'", "%Y-%m-%D"),
+                    date_applied=str_to_date("'.$_POST['date_applied'].'", "%m/%d/%Y"),
                     status="'.$_POST['status'].'",
                     notes="'.$_POST['notes'].'",
                     phone_screen="'.$_POST['phone_screen'].'",
@@ -88,7 +88,7 @@ if($submitted == 'true'){
 switch($mode){
     case 'edit':
         $form_title = 'Edit Job Application';
-        $sql = 'SELECT job_id, company_id, company, job_title, job_category, city, state, contact, referred_by, date_applied, status, notes, phone_screen, first_interview, second_interview, offer FROM job WHERE job_id = '.$job_id;
+        $sql = 'SELECT job_id, company_id, company, job_title, job_category, city, state, contact, referred_by, date_format(date_applied,"%m/%d/%Y") date_applied, status, notes, phone_screen, first_interview, second_interview, offer FROM job WHERE job_id = '.$job_id;
         $job_detail = $pdo->query($sql);
         while ($row = $job_detail->fetch()){
             $company_id = $row['company_id'];
@@ -178,10 +178,11 @@ switch($mode){
                     $('#date_applied').after('<span class="error"> Please enter the ' + inputMessage[0] + '</span>');
                     valid_form = false;
                 } 
-                else if(!dateReg.test(date_applied)){
+                //this is not working correctly, Issue #24 entered.
+                /*else if(!dateReg.test(date_applied)){
                     $('#date_applied').after('<span class="error"> Date format (mm/dd/yyyy)</span>');
                     valid_form = false;
-                }
+                }*/
 
                 if(inputVal[1] == ""){
                     $('#company').after('<span class="error"> Please select a ' + inputMessage[1] + '</span>');
