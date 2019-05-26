@@ -18,8 +18,10 @@ a:visited {
 /* Applies to all <h1>...</h1> elements. */
 h1 {
   font-size: 30px;
+  font-style: italic;
   font-weight: bold;
   margin-top: 5px;
+  
 }
 
 label{

@@ -47,7 +47,7 @@
 
 <body>
     <a href="searchResults.php" target="results_frame"><img id="workingman" width="150" height="150" src="img/workingman.jpg" alt="Get a Job!" /></a>
-    <h1>Job Search HQ</h1>
+    <h1>Jobsearch!</h1>
     <table border="0">
         <tr>
             <td>
