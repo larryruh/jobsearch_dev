@@ -67,10 +67,10 @@ label{
 
 }
 .notification {
-  font-size: 15px;
-  font-weight: bold;
-  margin-top: 5px;
-  color: red;
+    font-size: 15px;
+    font-weight: bold;
+    margin-top: 5px;
+    color: red;
 }
 .splash {
     align-content: center;
@@ -86,4 +86,11 @@ label{
     font-size: 35px;
     font-weight: normal;
     text-decoration: none;
+}
+#job_count{
+    font-size: 15px;
+    font-weight: bold;
+    font-style: italic;
+    margin-top: 5px;
+    color: red;
 }

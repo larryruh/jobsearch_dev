@@ -163,10 +163,11 @@ try {
             echo '<option value="No">No</option>';
             echo '</select></td>'; 
         echo '</tr>';
-        
-        
-        $result = $pdo->query($report_sql);
+           
+    $result = $pdo->query($report_sql);
+        $app_count = $result->fetchColumn();
         while ($row = $result->fetch()) { 
+            $app_count ++;
             echo '<tr class="report_detail">';
             echo '<td><a href="edit_job.php?mode=edit&job_id='.$row['job_id'] .'"><img src="img/edit_pencil.jpg" height=12 width=12></a></td>';
             echo '<td>'.$row['company'].'</td>';
@@ -181,9 +182,11 @@ try {
                 }
                 echo '></td>';
             echo '</tr>';   
-
         }
     ?>
 </table> 
+<!--Don't like this here, need to move to top of table-->
+<div id="job_count">Application Count: <?=$app_count?></div>
+    
 </body>
 </html>
