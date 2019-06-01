@@ -164,8 +164,8 @@ try {
             echo '</select></td>'; 
         echo '</tr>';
            
-    $result = $pdo->query($report_sql);
-        $app_count = $result->fetchColumn();
+        $app_count = 0;
+        $result = $pdo->query($report_sql);
         while ($row = $result->fetch()) { 
             $app_count ++;
             echo '<tr class="report_detail">';
